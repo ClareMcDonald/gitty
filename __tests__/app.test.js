@@ -2,6 +2,7 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
+const User = require('../lib/models/User');
 
 jest.mock('../lib/utils/github');
 
@@ -25,16 +26,21 @@ describe('gitty routes', () => {
       .agent(app)
       .get('/api/v1/github/login/callback?code=42')
       .redirects(1);
-    console.log(res);
+  
     expect(res.req.path).toEqual('/api/v1/posts');
   });
 
   it('should list posts for all users', async () => {
+    await User.insert({
+      username: 'test_user',
+      photoUrl: 'http://image.com/image.png',
+    });
+    
     const res = await request
       .agent(app)
-      .get('/api/v1/posts')
-      .send('Gotta get down on Friday, everybody is looking forward to the weekend, weekend.');
+      .get('/api/v1/posts');
     
+    console.log(res);
     expect(res.body).toEqual([{ id: expect.any(String), text: 'Gotta get down on Friday, everybody is looking forward to the weekend, weekend.', username: expect.any(String) }]);
   });
 });
