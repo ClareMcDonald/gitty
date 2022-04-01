@@ -28,4 +28,8 @@ describe('gitty routes', () => {
     console.log(res);
     expect(res.req.path).toEqual('/api/v1/posts');
   });
+
+  it('should list posts for all users', async () => {
+
+  });
 });

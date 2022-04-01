@@ -13,3 +13,8 @@ CREATE TABLE posts (
     text TEXT NOT NULL,
     username TEXT REFERENCES users(github_username)
 );
+
+INSERT INTO
+    posts (text)
+VALUES
+    ('Gotta get down on Friday, everybody is looking forward to the weekend, weekend.');
