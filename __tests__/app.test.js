@@ -30,6 +30,11 @@ describe('gitty routes', () => {
   });
 
   it('should list posts for all users', async () => {
-
+    const res = await request
+      .agent(app)
+      .get('/api/v1/posts')
+      .send('Gotta get down on Friday, everybody is looking forward to the weekend, weekend.');
+    
+    expect(res.body).toEqual([{ id: expect.any(String), text: 'Gotta get down on Friday, everybody is looking forward to the weekend, weekend.', username: expect.any(String) }]);
   });
 });
