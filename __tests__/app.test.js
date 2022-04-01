@@ -36,6 +36,16 @@ describe('gitty routes', () => {
       photoUrl: 'http://image.com/image.png',
     });
     
+    await request
+      .agent(app)
+      .get('/api/v1/github/login/callback?code=42')
+      .redirects(1);
+  
+    await request
+      .agent(app)
+      .post('/api/v1/posts')
+      .send({ text: 'Gotta get down on Friday, everybody is looking forward to the weekend, weekend.' });
+    
     const res = await request
       .agent(app)
       .get('/api/v1/posts');
