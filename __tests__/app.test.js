@@ -44,21 +44,20 @@ describe('gitty routes', () => {
     const res = await agent
       .get('/api/v1/posts');
     
-    console.log('RESPONSE', res);
     expect(res.body).toEqual([{ id: expect.any(String), text: 'Gotta get down on Friday, everybody is looking forward to the weekend, weekend.', username: expect.any(String) }]);
   });
 
   it('creates a tweet via POST', async () => {
-    await User.insert({
-      username: 'test_user',
-      photoUrl: 'http://image.com/image.png'
-    });
+    const agent = request.agent(app);
 
-    return request(app)
+    await agent
+      .get('/api/v1/github/login/callback?code=42')
+      .redirects(1);
+
+    const res = await agent
       .post('/api/v1/posts')
-      .send({ text: 'Hello, this is my first post!' })
-      .then((res) => {
-        expect(res.body).toEqual({ id: '1', text: 'Hello, this is my frist post!', username: 'text_user' });
-      });
+      .send({ text: 'Hello, this is my first post!' });
+  
+    expect(res.body).toEqual({ id: '1', text: 'Hello, this is my first post!', username: 'fake_github_user' });
   });
 });
