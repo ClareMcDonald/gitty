@@ -2,7 +2,6 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
-const User = require('../lib/models/User');
 
 jest.mock('../lib/utils/github');
 
@@ -59,5 +58,21 @@ describe('gitty routes', () => {
       .send({ text: 'Hello, this is my first post!' });
   
     expect(res.body).toEqual({ id: '1', text: 'Hello, this is my first post!', username: 'fake_github_user' });
+  });
+
+  it('logs out a user with DELETE', async () => {
+    const user = { username: 'clare', photoUrl: 'https://www.placekitten.com/gif/300/300' };
+
+    const agent = request.agent(app);
+
+    await agent
+      .get('/api/v1/github/login/callback?code=42')
+      .redirects(1);
+    
+    const res = await agent
+      .delete('/api/v1/github/delete')
+      .send(user);
+    
+    expect(res.body).toEqual({ status: 404, message: 'Not Found' });
   });
 });
