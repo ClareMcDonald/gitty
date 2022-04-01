@@ -21,18 +21,11 @@ describe('gitty routes', () => {
   });
 
   it('should login and redirect users to /api/v1/posts', async () => {
-    const req = await request
+    const res = await request
       .agent(app)
       .get('/api/v1/github/login/callback?code=42')
       .redirects(1);
-    
-    expect(req.body).toEqual({
-      id: expect.any(String),
-      username: 'fake_github_user',
-      email: 'not-real@example.com',
-      avatar: expect.any(String),
-      iat: expect.any(Number),
-      exp: expect.any(Number)
-    });
+    console.log(res);
+    expect(res.req.path).toEqual('/api/v1/posts');
   });
 });
