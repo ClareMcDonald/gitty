@@ -31,26 +31,20 @@ describe('gitty routes', () => {
   });
 
   it('should list posts for all users', async () => {
-    await User.insert({
-      username: 'test_user',
-      photoUrl: 'http://image.com/image.png',
-    });
-    
-    await request
-      .agent(app)
+    const agent = request.agent(app);
+
+    await agent
       .get('/api/v1/github/login/callback?code=42')
       .redirects(1);
   
-    await request
-      .agent(app)
+    await agent
       .post('/api/v1/posts')
       .send({ text: 'Gotta get down on Friday, everybody is looking forward to the weekend, weekend.' });
     
-    const res = await request
-      .agent(app)
+    const res = await agent
       .get('/api/v1/posts');
     
-    console.log(res);
+    console.log('RESPONSE', res);
     expect(res.body).toEqual([{ id: expect.any(String), text: 'Gotta get down on Friday, everybody is looking forward to the weekend, weekend.', username: expect.any(String) }]);
   });
 
