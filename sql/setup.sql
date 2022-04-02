@@ -10,7 +10,7 @@ CREATE TABLE users (
 
 CREATE TABLE posts (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    text TEXT NOT NULL,
+    text VARCHAR(255) NOT NULL,
     username TEXT REFERENCES users(github_username)
 );
 
